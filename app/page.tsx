@@ -4,6 +4,8 @@ import Header from "../components/Header";
 import ArticleCard from "../components/ArticleCard";
 import Footer from "../components/Footer";
 import { useLanguage } from "../components/LanguageContext";
+import { useEffect, useState } from "react";
+import type { ArticleRecord } from "../lib/articles";
 
 const content = {
   en: {
@@ -92,6 +94,41 @@ const content = {
 export default function HomePage() {
   const { language } = useLanguage();
   const t = content[language];
+  const [published, setPublished] = useState<ArticleRecord[]>([]);
+
+  useEffect(() => {
+    fetch("/api/articles")
+      .then((response) => response.json())
+      .then((records) => {
+        if (Array.isArray(records)) {
+          setPublished(records);
+        }
+      })
+      .catch(() => undefined);
+  }, []);
+
+  const databasePosts = published.map((article) => ({
+    slug: article.slug,
+    title: language === "zh" ? article.title_zh : article.title_en,
+    category:
+      language === "zh" ? article.category_zh : article.category_en,
+    excerpt:
+      language === "zh" ? article.excerpt_zh : article.excerpt_en,
+    image: article.cover_url || article.images[0],
+  }));
+  const databaseSlugs = new Set(databasePosts.map((post) => post.slug));
+  const posts = [
+    ...databasePosts,
+    ...t.posts
+      .filter((post) => !databaseSlugs.has(post.slug))
+      .map((post) => ({
+        ...post,
+        image:
+          post.slug === "airforce-animatronics-single-tube"
+            ? "/images/articles/airforce/00-cover.jpg"
+            : undefined,
+      })),
+  ];
 
   return (
     <main className="min-h-screen bg-neutral-50 text-neutral-900">
@@ -132,18 +169,14 @@ export default function HomePage() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {t.posts.map((post) => (
+          {posts.map((post) => (
             <ArticleCard
               key={post.slug}
               slug={post.slug}
               title={post.title}
               category={post.category}
               excerpt={post.excerpt}
-              image={
-                post.slug === "airforce-animatronics-single-tube"
-                  ? "/images/articles/airforce/00-cover.jpg"
-                  : undefined
-              }
+              image={post.image}
             />
           ))}
         </div>

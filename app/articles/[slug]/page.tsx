@@ -4,6 +4,8 @@ import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import { useLanguage } from "../../../components/LanguageContext";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import type { ArticleRecord } from "../../../lib/articles";
 
 type LocalizedArticle = {
   category: string;
@@ -166,11 +168,57 @@ export default function ArticleDetailPage() {
   const { language } = useLanguage();
   const params = useParams();
   const slug = params.slug as string;
+  const [databaseArticle, setDatabaseArticle] =
+    useState<ArticleRecord | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
-  const article = articles[slug as keyof typeof articles]?.[language];
+  useEffect(() => {
+    fetch(`/api/articles/${encodeURIComponent(slug)}`)
+      .then(async (response) =>
+        response.ok ? ((await response.json()) as ArticleRecord) : null,
+      )
+      .then(setDatabaseArticle)
+      .catch(() => setDatabaseArticle(null))
+      .finally(() => setLoaded(true));
+  }, [slug]);
+
+  const fallbackArticle =
+    articles[slug as keyof typeof articles]?.[language];
+  const article: LocalizedArticle | undefined = databaseArticle
+    ? {
+        category:
+          language === "zh"
+            ? databaseArticle.category_zh
+            : databaseArticle.category_en,
+        title:
+          language === "zh"
+            ? databaseArticle.title_zh
+            : databaseArticle.title_en,
+        intro:
+          language === "zh"
+            ? databaseArticle.excerpt_zh
+            : databaseArticle.excerpt_en,
+        body:
+          language === "zh"
+            ? databaseArticle.body_zh
+            : databaseArticle.body_en,
+        author: databaseArticle.author,
+        team: databaseArticle.team,
+        sourceName: databaseArticle.source_name,
+        sourceUrl: databaseArticle.source_url,
+        images: [
+          databaseArticle.cover_url,
+          ...databaseArticle.images,
+        ].filter(Boolean),
+      }
+    : fallbackArticle;
 
   if (!article) {
-    return <div className="p-10">Article not found.</div>;
+    return (
+      <div className="p-10">
+        {loaded ? "Article not found." : "Loading…"}
+      </div>
+    );
   }
 
   return (

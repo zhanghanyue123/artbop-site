@@ -1,4 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ArtBOP Site
+
+ArtBOP public site and editorial CMS.
+
+## Editorial CMS setup
+
+1. In Supabase SQL Editor, run `supabase/schema.sql`.
+2. Optionally run `supabase/seed-airforce.sql`.
+3. In Supabase Authentication, create one email/password editor user.
+4. Add the values from `.env.example` to Vercel Environment Variables.
+5. Deploy and open `/editor`.
+
+Only articles with `published` status, or scheduled articles whose publish
+time has arrived, appear on the public website. The service-role key and
+agent ingest key must only be stored as server environment variables.
+
+The Tencent Cloud agent can upload images to `/api/agent/upload` and send an
+article to `/api/agent/articles` with:
+
+```text
+Authorization: Bearer <AGENT_INGEST_KEY>
+```
+
+Agent submissions are always saved as `pending_review`; only the editor can
+publish them.
 
 ## Getting Started
 
