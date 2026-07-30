@@ -22,8 +22,8 @@ insert into public.articles (
 )
 values (
   'airforce-animatronics-single-tube',
-  'published',
-  now(),
+  'draft',
+  null,
   'AirForce — Animatronics Structures from a Single Tube',
   '一根管子撑起人类重量？AirForce 气动装置',
   'A fabrication system that turns one continuous inflatable tube into large-scale, load-bearing animated structures.',
