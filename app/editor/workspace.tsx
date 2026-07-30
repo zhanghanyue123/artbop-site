@@ -415,9 +415,9 @@ export default function EditorWorkspace({ email }: Props) {
           </div>
 
           <div className="mt-7 rounded-2xl border p-5">
-            <h2 className="font-semibold">共享标签</h2>
+            <h2 className="font-semibold">网站文章标签</h2>
             <p className="mt-1 text-sm text-neutral-500">
-              标签与腾讯云运营仪表盘共用；小红书标题和正文仍在运营仪表盘中人工处理。
+              用空格分隔多个标签，例如：#ArtBOP #数字艺术 #交互设计
             </p>
             <label className={`${labelClass} mt-4`}>
               # 标签（空格分隔）
