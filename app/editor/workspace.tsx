@@ -117,19 +117,30 @@ export default function EditorWorkspace({ email }: Props) {
     setDraft((current) => ({ ...current, [key]: value }));
   }
 
-  async function saveArticle() {
+  async function saveArticle(statusOverride?: ArticleStatus) {
     if (!draft.slug || !draft.title_en || !draft.title_zh) {
       setMessage("请至少填写 slug、中英文标题。");
       return;
     }
 
-    if (draft.status === "scheduled" && !draft.publish_at) {
+    const nextStatus = statusOverride || draft.status;
+    if (nextStatus === "scheduled" && !draft.publish_at) {
       setMessage("选择定时发布时必须填写发布时间。");
       return;
     }
 
+    const payload = {
+      ...draft,
+      status: nextStatus,
+      publish_at:
+        nextStatus === "scheduled" ? draft.publish_at : null,
+    };
     setSaving(true);
-    setMessage("正在保存…");
+    setMessage(
+      nextStatus === "published"
+        ? "正在发布到网站…"
+        : "正在保存草稿…",
+    );
     const response = await fetch(
       selectedId
         ? `/api/editor/articles/${selectedId}`
@@ -137,7 +148,7 @@ export default function EditorWorkspace({ email }: Props) {
       {
         method: selectedId ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(draft),
+        body: JSON.stringify(payload),
       },
     );
     const result = await response.json();
@@ -403,19 +414,41 @@ export default function EditorWorkspace({ email }: Props) {
             </div>
           </div>
 
-          <details className="mt-7 rounded-2xl border p-5">
-            <summary className="cursor-pointer font-semibold">小红书人工发布文案</summary>
-            <div className="mt-5 grid gap-5">
-              <label className={labelClass}>标题<input value={draft.xhs_title} onChange={(event) => setField("xhs_title", event.target.value)} className={inputClass} /></label>
-              <label className={labelClass}>正文<textarea value={draft.xhs_content} onChange={(event) => setField("xhs_content", event.target.value)} className={`${inputClass} min-h-40`} /></label>
-              <label className={labelClass}>标签（空格分隔）<input value={draft.hashtags.join(" ")} onChange={(event) => setField("hashtags", event.target.value.split(/\s+/).filter(Boolean))} className={inputClass} /></label>
-            </div>
-          </details>
+          <div className="mt-7 rounded-2xl border p-5">
+            <h2 className="font-semibold">共享标签</h2>
+            <p className="mt-1 text-sm text-neutral-500">
+              标签与腾讯云运营仪表盘共用；小红书标题和正文仍在运营仪表盘中人工处理。
+            </p>
+            <label className={`${labelClass} mt-4`}>
+              # 标签（空格分隔）
+              <input
+                value={draft.hashtags.join(" ")}
+                onChange={(event) =>
+                  setField(
+                    "hashtags",
+                    event.target.value.split(/\s+/).filter(Boolean),
+                  )
+                }
+                className={inputClass}
+              />
+            </label>
+          </div>
 
           {message && <p className="mt-5 text-sm text-neutral-600">{message}</p>}
           <div className="mt-6 flex flex-wrap gap-3">
-            <button disabled={saving} onClick={saveArticle} className="rounded-xl bg-black px-6 py-3 text-sm text-white disabled:opacity-50">
-              {saving ? "保存中…" : draft.status === "published" ? "保存并公开发布" : "保存"}
+            <button
+              disabled={saving}
+              onClick={() => saveArticle("draft")}
+              className="rounded-xl border border-neutral-300 px-6 py-3 text-sm disabled:opacity-50"
+            >
+              {saving ? "处理中…" : "保存草稿"}
+            </button>
+            <button
+              disabled={saving}
+              onClick={() => saveArticle("published")}
+              className="rounded-xl bg-black px-6 py-3 text-sm text-white disabled:opacity-50"
+            >
+              {saving ? "处理中…" : "发布到网站"}
             </button>
             {selected && (
               <>
