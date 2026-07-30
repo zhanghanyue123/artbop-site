@@ -184,6 +184,8 @@ export default function ArticleDetailPage() {
 
   const fallbackArticle =
     articles[slug as keyof typeof articles]?.[language];
+  const canUseFallback =
+    slug !== "airforce-animatronics-single-tube" || !loaded;
   const article: LocalizedArticle | undefined = databaseArticle
     ? {
         category:
@@ -211,7 +213,9 @@ export default function ArticleDetailPage() {
           ...databaseArticle.images,
         ].filter(Boolean),
       }
-    : fallbackArticle;
+    : canUseFallback
+      ? fallbackArticle
+      : undefined;
 
   if (!article) {
     return (

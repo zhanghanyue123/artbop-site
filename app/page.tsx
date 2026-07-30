@@ -20,13 +20,6 @@ const content = {
     viewAll: "View all",
     posts: [
       {
-        slug: "airforce-animatronics-single-tube",
-        title: "AirForce — Animatronics Structures from a Single Tube",
-        category: "Art & Technology",
-        excerpt:
-          "A fabrication system that turns one continuous inflatable tube into large-scale, load-bearing animated structures.",
-      },
-      {
         slug: "atmospheric-interfaces",
         title: "Atmospheric Interfaces in Public Space",
         category: "Official Feature",
@@ -59,13 +52,6 @@ const content = {
     featured: "精选内容",
     viewAll: "查看全部",
     posts: [
-      {
-        slug: "airforce-animatronics-single-tube",
-        title: "一根管子撑起人类重量？AirForce 气动装置",
-        category: "艺术科技 / 数字制造",
-        excerpt:
-          "一套将连续充气管转化为大型承重动态结构的制造系统，让结构本身同时成为驱动力。",
-      },
       {
         slug: "atmospheric-interfaces",
         title: "公共空间中的氛围界面",
@@ -123,10 +109,7 @@ export default function HomePage() {
       .filter((post) => !databaseSlugs.has(post.slug))
       .map((post) => ({
         ...post,
-        image:
-          post.slug === "airforce-animatronics-single-tube"
-            ? "/images/articles/airforce/00-cover.jpg"
-            : undefined,
+        image: undefined,
       })),
   ];
 
