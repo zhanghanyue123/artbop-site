@@ -29,7 +29,6 @@ function publicHeaders() {
 
   return {
     apikey: anonKey,
-    Authorization: `Bearer ${anonKey}`,
   };
 }
 
@@ -38,7 +37,6 @@ function serviceHeaders() {
 
   return {
     apikey: serviceKey,
-    Authorization: `Bearer ${serviceKey}`,
     "Content-Type": "application/json",
   };
 }
@@ -197,7 +195,6 @@ export async function uploadArticleImage(
       method: "POST",
       headers: {
         apikey: serviceKey,
-        Authorization: `Bearer ${serviceKey}`,
         "Content-Type": file.type || "application/octet-stream",
         "x-upsert": "true",
       },
