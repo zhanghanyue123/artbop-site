@@ -18,8 +18,12 @@ export async function POST(request: Request) {
       );
     }
 
-    input.status = "pending_review";
-    input.publish_at = null;
+    input.status =
+      input.status === "published" ? "published" : "pending_review";
+    input.publish_at =
+      input.status === "published"
+        ? input.publish_at || new Date().toISOString()
+        : null;
 
     return NextResponse.json(await upsertEditorArticle(input), {
       status: 201,

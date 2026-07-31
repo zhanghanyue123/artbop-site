@@ -21,8 +21,9 @@ article to `/api/agent/articles` with:
 Authorization: Bearer <AGENT_INGEST_KEY>
 ```
 
-Agent submissions are always saved as `pending_review`; only the editor can
-publish them.
+Agent submissions default to `pending_review`. An authenticated agent may
+send `status: "published"` to publish immediately. Social-media copy remains
+outside the website CMS.
 
 ## Getting Started
 
