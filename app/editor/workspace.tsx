@@ -357,11 +357,17 @@ export default function EditorWorkspace({ email }: Props) {
               <textarea value={draft.excerpt_en} onChange={(event) => setField("excerpt_en", event.target.value)} className={`${inputClass} min-h-24`} />
             </label>
             <label className={`${labelClass} md:col-span-2`}>
-              中文正文（每段之间空一行）
+              中文网站主稿（每节之间空一行）
+              <span className="mt-1 block font-normal text-neutral-500">
+                使用“小标题｜正文”格式，建议依次为：项目概述、创作背景、如何运作、材料与技术、体验与意义、ArtBOP 观察。
+              </span>
               <textarea value={draft.body_zh.join("\n\n")} onChange={(event) => setField("body_zh", event.target.value.split(/\n\s*\n/).filter(Boolean))} className={`${inputClass} min-h-56`} />
             </label>
             <label className={`${labelClass} md:col-span-2`}>
-              英文正文（每段之间空一行）
+              英文网站简版（每节之间空一行）
+              <span className="mt-1 block font-normal text-neutral-500">
+                英文需重新编辑为 3–5 节，不照抄来源，也不逐句翻译中文；使用“Section title｜Paragraph”格式。
+              </span>
               <textarea value={draft.body_en.join("\n\n")} onChange={(event) => setField("body_en", event.target.value.split(/\n\s*\n/).filter(Boolean))} className={`${inputClass} min-h-56`} />
             </label>
             <label className={labelClass}>

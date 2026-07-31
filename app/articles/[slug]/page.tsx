@@ -17,7 +17,22 @@ type LocalizedArticle = {
   sourceName?: string;
   sourceUrl?: string;
   images?: string[];
+  hashtags?: string[];
+  publishedAt?: string | null;
 };
+
+function splitSection(value: string) {
+  const separator = value.indexOf("｜");
+
+  if (separator < 0) {
+    return { heading: "", paragraph: value };
+  }
+
+  return {
+    heading: value.slice(0, separator).trim(),
+    paragraph: value.slice(separator + 1).trim(),
+  };
+}
 
 const articles: Record<
   string,
@@ -208,10 +223,17 @@ export default function ArticleDetailPage() {
         team: databaseArticle.team,
         sourceName: databaseArticle.source_name,
         sourceUrl: databaseArticle.source_url,
-        images: [
-          databaseArticle.cover_url,
-          ...databaseArticle.images,
-        ].filter(Boolean),
+        images: Array.from(
+          new Set(
+            [
+              databaseArticle.cover_url,
+              ...databaseArticle.images,
+            ].filter(Boolean),
+          ),
+        ),
+        hashtags: databaseArticle.hashtags,
+        publishedAt:
+          databaseArticle.publish_at || databaseArticle.created_at,
       }
     : canUseFallback
       ? fallbackArticle
@@ -224,6 +246,23 @@ export default function ArticleDetailPage() {
       </div>
     );
   }
+
+  const [heroImage, ...bodyImages] = article.images || [];
+  const remainingImages = bodyImages.slice(article.body.length);
+  const metadataLabels =
+    language === "zh"
+      ? {
+          author: "作者",
+          team: "团队",
+          published: "发布",
+          source: "原始来源",
+        }
+      : {
+          author: "Author",
+          team: "Team",
+          published: "Published",
+          source: "Original source",
+        };
 
   return (
     <main className="min-h-screen bg-neutral-50 text-neutral-900">
@@ -244,31 +283,90 @@ export default function ArticleDetailPage() {
 
         {(article.author || article.team) && (
           <div className="mt-8 border-y border-neutral-200 py-5 text-sm leading-7 text-neutral-600">
-            {article.author && <p>Author: {article.author}</p>}
-            {article.team && <p>Team: {article.team}</p>}
+            {article.author && (
+              <p>{metadataLabels.author}: {article.author}</p>
+            )}
+            {article.team && (
+              <p>{metadataLabels.team}: {article.team}</p>
+            )}
+            {article.publishedAt && (
+              <p>
+                {metadataLabels.published}:{" "}
+                {new Intl.DateTimeFormat(
+                  language === "zh" ? "zh-CN" : "en",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  },
+                ).format(new Date(article.publishedAt))}
+              </p>
+            )}
           </div>
         )}
 
-        <div className="mt-10 space-y-6 text-neutral-800 leading-8 text-lg">
-          {article.body.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
+        {heroImage && (
+          <img
+            src={heroImage}
+            alt={`${article.title} — cover`}
+            className="mt-10 w-full rounded-3xl bg-white object-contain"
+            loading="eager"
+          />
+        )}
+
+        <div className="mt-12 space-y-12 text-neutral-800">
+          {article.body.map((section, index) => {
+            const { heading, paragraph } = splitSection(section);
+            const image = bodyImages[index];
+
+            return (
+              <section key={`${heading}-${index}`}>
+                {heading && (
+                  <h2 className="mb-4 text-2xl font-semibold tracking-tight">
+                    {heading}
+                  </h2>
+                )}
+                <p className="text-lg leading-8">{paragraph}</p>
+                {image && (
+                  <img
+                    src={image}
+                    alt={`${article.title} — image ${index + 1}`}
+                    className="mt-8 w-full rounded-2xl bg-white object-contain"
+                    loading="lazy"
+                  />
+                )}
+              </section>
+            );
+          })}
         </div>
 
-        {article.images && article.images.length > 0 && (
+        {remainingImages.length > 0 && (
           <section className="mt-14 border-t border-neutral-200 pt-8">
             <div className="space-y-8">
-              {article.images.map((src, index) => (
+              {remainingImages.map((src, index) => (
                 <img
                   key={src}
                   src={src}
-                  alt={`${article.title} — image ${index + 1}`}
+                  alt={`${article.title} — gallery image ${index + 1}`}
                   className="w-full rounded-2xl bg-white object-contain"
-                  loading={index === 0 ? "eager" : "lazy"}
+                  loading="lazy"
                 />
               ))}
             </div>
           </section>
+        )}
+
+        {article.hashtags && article.hashtags.length > 0 && (
+          <div className="mt-10 flex flex-wrap gap-2">
+            {article.hashtags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-neutral-200 px-3 py-1.5 text-sm text-neutral-700"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         )}
 
         {article.sourceUrl && (
@@ -278,7 +376,8 @@ export default function ArticleDetailPage() {
             rel="noreferrer"
             className="mt-10 inline-block text-sm underline underline-offset-4"
           >
-            Source: {article.sourceName || article.sourceUrl}
+            {metadataLabels.source}:{" "}
+            {article.sourceName || article.sourceUrl}
           </a>
         )}
       </article>
