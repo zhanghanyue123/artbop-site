@@ -15,6 +15,7 @@ const navText = {
     residencies: "Residencies",
     directory: "Design Directory",
     jobs: "Jobs",
+    study: "Schools & Admissions",
     shop: "Shop",
     login: "Log in",
     account: "Account",
@@ -29,6 +30,7 @@ const navText = {
     residencies: "驻留",
     directory: "设计名录",
     jobs: "招聘",
+    study: "院校申请",
     shop: "商店",
     login: "登录",
     account: "账号",
@@ -43,6 +45,7 @@ const listingLinks = {
     ["/competitions", "Competitions"],
     ["/residencies", "Residencies"],
     ["/jobs", "Jobs"],
+    ["/study", "Schools & Admissions"],
   ],
   zh: [
     ["/submit", "提交项目"],
@@ -51,6 +54,7 @@ const listingLinks = {
     ["/competitions", "竞赛"],
     ["/residencies", "驻留"],
     ["/jobs", "招聘"],
+    ["/study", "院校申请"],
   ],
 };
 
@@ -138,6 +142,7 @@ export default function Header() {
           <Link href="/competitions" className="shrink-0">{t.competitions}</Link>
           <Link href="/residencies" className="shrink-0">{t.residencies}</Link>
           <Link href="/jobs" className="shrink-0">{t.jobs}</Link>
+          <Link href="/study" className="shrink-0">{t.study}</Link>
           <Link href="/shop" className="shrink-0">{t.shop}</Link>
           {!loading && (
             <Link href={user ? "/account" : "/login"} className="shrink-0">

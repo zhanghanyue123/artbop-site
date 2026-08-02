@@ -4,6 +4,7 @@ import type { ArticleRecord } from "../lib/articles";
 import { competitions } from "../data/competitions";
 import { residencies } from "../data/residencies";
 import { jobs } from "../data/jobs";
+import { programs } from "../data/programs";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.artbop.xyz";
@@ -31,7 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.5,
     },
-    ...["competitions", "residencies", "jobs"].map((section) => ({
+    ...["competitions", "residencies", "jobs", "study"].map((section) => ({
       url: `${baseUrl}/${section}`,
       lastModified: new Date("2026-08-02"),
       changeFrequency: "weekly" as const,
@@ -54,6 +55,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(item.published_at || "2026-08-02"),
       changeFrequency: "weekly" as const,
       priority: 0.65,
+    })),
+    ...programs.map((item) => ({
+      url: `${baseUrl}/study/${item.slug}`,
+      lastModified: new Date(item.published_at),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
     })),
     ...articles.map((article) => ({
       url: `${baseUrl}/articles/${article.slug}`,

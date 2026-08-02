@@ -27,6 +27,8 @@ export default function OpportunityListPage({
   description,
   descriptionEn,
   items,
+  countLabel,
+  countLabelEn,
 }: {
   eyebrow: string;
   title: string;
@@ -34,6 +36,8 @@ export default function OpportunityListPage({
   description: string;
   descriptionEn: string;
   items: Opportunity[];
+  countLabel?: string;
+  countLabelEn?: string;
 }) {
   const { language } = useLanguage();
 
@@ -56,7 +60,7 @@ export default function OpportunityListPage({
         </div>
 
         <div className="flex items-center justify-between border-b border-neutral-300 py-5 text-xs text-neutral-500">
-          <span>{language === "zh" ? `${items.length} 条开放机会` : `${items.length} open opportunities`}</span>
+          <span>{language === "zh" ? `${items.length} ${countLabel || "条开放机会"}` : `${items.length} ${countLabelEn || "open opportunities"}`}</span>
           <span>{language === "zh" ? "核对于 2026.08.02" : "Verified 02 Aug 2026"}</span>
         </div>
 
