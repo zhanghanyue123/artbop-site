@@ -21,8 +21,9 @@ export default function ArticleCard({
         {image && (
           <img
             src={image}
-            alt=""
+            alt={title}
             className="w-full aspect-[4/3] object-cover"
+            loading="lazy"
           />
         )}
         <div className="p-6">
