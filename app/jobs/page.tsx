@@ -1,5 +1,12 @@
 import OpportunityListPage, { Opportunity } from "../../components/OpportunityListPage";
 import { jobs } from "../../data/jobs";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "艺术、设计与创意科技招聘",
+  description: "汇总艺术、交互设计、数字媒体、创意科技与跨学科研究方向的真实招聘信息。",
+  alternates: { canonical: "/jobs" },
+};
 
 const items: Opportunity[] = jobs.map((item) => ({
   id: item.id, title: item.title, title_zh: item.title_zh,

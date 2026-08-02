@@ -1,8 +1,17 @@
 import { notFound } from "next/navigation";
 import OpportunityDetailPage from "../../../components/OpportunityDetailPage";
 import { competitions } from "../../../data/competitions";
+import type { Metadata } from "next";
+import { opportunityMetadata } from "../../../lib/seo";
 
 export function generateStaticParams() { return competitions.map((item) => ({ slug: item.slug })); }
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const item = competitions.find((entry) => entry.slug === slug);
+  if (!item) return {};
+  return opportunityMetadata({ title: item.title_zh || item.title, description: item.summary_zh || item.summary, path: `/competitions/${slug}`, image: item.image });
+}
 
 export default async function CompetitionDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

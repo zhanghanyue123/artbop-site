@@ -4,6 +4,7 @@ import Link from "next/link";
 import Header from "./Header";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageContext";
+import JsonLd from "./JsonLd";
 
 export type OpportunityDetail = {
   type: string;
@@ -26,9 +27,31 @@ export type OpportunityDetail = {
 export default function OpportunityDetailPage({ item }: { item: OpportunityDetail }) {
   const { language } = useLanguage();
   const zh = language === "zh";
+  const seoTitle = item.titleZh || item.title;
 
   return (
     <main className="min-h-screen bg-white text-neutral-950">
+      <JsonLd data={[
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: seoTitle,
+          description: item.summaryZh || item.summary,
+          inLanguage: "zh-CN",
+          isPartOf: { "@type": "WebSite", name: "ArtBOP", url: "https://www.artbop.xyz/" },
+          about: { "@type": "Thing", name: item.organization },
+          image: item.image,
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "ArtBOP", item: "https://www.artbop.xyz/" },
+            { "@type": "ListItem", position: 2, name: item.typeZh, item: `https://www.artbop.xyz${item.backHref}` },
+            { "@type": "ListItem", position: 3, name: seoTitle },
+          ],
+        },
+      ]} />
       <Header />
       <section className="mx-auto max-w-[1440px] px-5 py-10 md:px-8 md:py-16">
         <Link href={item.backHref} className="text-sm text-neutral-500 hover:text-black">

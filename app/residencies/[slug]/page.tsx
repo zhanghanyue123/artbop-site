@@ -1,8 +1,17 @@
 import { notFound } from "next/navigation";
 import OpportunityDetailPage from "../../../components/OpportunityDetailPage";
 import { residencies } from "../../../data/residencies";
+import type { Metadata } from "next";
+import { opportunityMetadata } from "../../../lib/seo";
 
 export function generateStaticParams() { return residencies.map((item) => ({ slug: item.slug })); }
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const item = residencies.find((entry) => entry.slug === slug);
+  if (!item) return {};
+  return opportunityMetadata({ title: item.title_zh || item.title, description: item.summary_zh || item.summary, path: `/residencies/${slug}`, image: item.image });
+}
 
 export default async function ResidencyDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

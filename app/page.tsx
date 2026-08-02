@@ -1,6 +1,11 @@
 import HomePageContent from "../components/HomePageContent";
 import { getPublicArticles } from "../lib/supabase-rest";
 import type { ArticleRecord } from "../lib/articles";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export const revalidate = 60;
 

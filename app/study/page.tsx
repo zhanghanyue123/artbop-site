@@ -1,5 +1,12 @@
 import OpportunityListPage, { Opportunity } from "../../components/OpportunityListPage";
 import { programs } from "../../data/programs";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "艺术科技与交互设计院校申请",
+  description: "艺术科技、创意计算、交互媒体和计算艺术专业的课程信息、申请要求与院校方向对比。",
+  alternates: { canonical: "/study" },
+};
 
 const items: Opportunity[] = programs.map((item) => ({
   id: item.id,

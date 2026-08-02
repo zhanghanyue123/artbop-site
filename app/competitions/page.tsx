@@ -1,5 +1,12 @@
 import OpportunityListPage, { Opportunity } from "../../components/OpportunityListPage";
 import { competitions } from "../../data/competitions";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "艺术竞赛与数字创作公开征集",
+  description: "ArtBOP 整理经过核实的当代艺术、数字艺术、创意科技与跨学科竞赛和公开征集。",
+  alternates: { canonical: "/competitions" },
+};
 
 const items: Opportunity[] = competitions.map((item) => ({
   id: item.id, title: item.title, title_zh: item.title_zh,

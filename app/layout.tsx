@@ -2,6 +2,7 @@ import "./globals.css";
 import { LanguageProvider } from "../components/LanguageContext";
 import { AuthProvider } from "../components/AuthContext";
 import type { Metadata } from "next";
+import JsonLd from "../components/JsonLd";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.artbop.xyz"),
@@ -20,9 +21,6 @@ export const metadata: Metadata = {
     "新媒体艺术",
     "ArtBOP",
   ],
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     type: "website",
     locale: "zh_CN",
@@ -49,6 +47,23 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body>
+        <JsonLd data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "ArtBOP",
+            alternateName: "ArtBOP 艺术科技内容平台",
+            url: "https://www.artbop.xyz/",
+            inLanguage: ["zh-CN", "en"],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "ArtBOP",
+            url: "https://www.artbop.xyz/",
+            description: "关注当代艺术、创意科技、数字艺术与跨学科实践的内容平台。",
+          },
+        ]} />
         <AuthProvider>
           <LanguageProvider>{children}</LanguageProvider>
         </AuthProvider>

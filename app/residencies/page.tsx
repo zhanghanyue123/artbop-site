@@ -1,5 +1,12 @@
 import OpportunityListPage, { Opportunity } from "../../components/OpportunityListPage";
 import { residencies } from "../../data/residencies";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "艺术家驻留与研究计划",
+  description: "经过核实的国内外艺术家驻留、艺术科技研究计划与跨学科创作机会。",
+  alternates: { canonical: "/residencies" },
+};
 
 const items: Opportunity[] = residencies.map((item) => ({
   id: item.id, title: item.title, title_zh: item.title_zh,
