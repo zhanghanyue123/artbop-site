@@ -24,6 +24,7 @@ export type ProgramItem = {
   tags: string[];
   source_url: string;
   published_at: string;
+  image?: string;
 };
 
 export const programs: ProgramItem[] = [
@@ -52,6 +53,7 @@ export const programs: ProgramItem[] = [
     tags: ["创意编程", "计算艺术", "社会影响"],
     source_url: "https://www.arts.ac.uk/subjects/creative-computing/postgraduate/msc-creative-computing",
     published_at: "2026-08-02",
+    image: "https://ual-media-res.cloudinary.com/image/fetch/c_fill%2Cf_auto%2Cg_auto%2Cq_auto%2Cw_1200%2Car_16%3A9/https%3A//www.arts.ac.uk/__data/assets/image/0029/312689/MAMSc-Computing-and-Creative-Industry_Modular2.jpg",
   },
   {
     id: "rca-ma-information-experience-design",
@@ -77,6 +79,7 @@ export const programs: ProgramItem[] = [
     tags: ["体验设计", "跨媒介", "批判性实践"],
     source_url: "https://www.rca.ac.uk/study/programme-finder/information-experience-design-ma/",
     published_at: "2026-08-02",
+    image: "https://rca-media2.rca.ac.uk/images/melting_myth.2e16d0ba.fill-1440x530.jpg",
   },
   {
     id: "nyu-itp-mps",

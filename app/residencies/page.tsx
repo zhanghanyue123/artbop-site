@@ -7,6 +7,7 @@ const items: Opportunity[] = residencies.map((item) => ({
   organization: item.organizer, location: item.location,
   deadline: item.deadline, tags: item.tags, source_url: item.source_url,
   href: `/residencies/${item.slug}`,
+  image: item.image,
   details: [
     ...(item.duration ? [{ label: "Duration", label_zh: "周期", value: item.duration }] : []),
     ...(item.funding ? [{ label: "Funding", label_zh: "资助", value: item.funding }] : []),

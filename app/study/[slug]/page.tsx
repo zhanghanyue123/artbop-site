@@ -14,6 +14,7 @@ export default async function ProgramDetail({ params }: { params: Promise<{ slug
     title: item.title, titleZh: item.title_zh, organization: item.school,
     summary: item.summary, summaryZh: item.summary_zh, location: item.location,
     deadline: item.next_deadline, tags: item.tags, sourceUrl: item.source_url,
+    image: item.image,
     details: [
       { label: "Degree", labelZh: "学位", value: item.degree },
       { label: "Duration", labelZh: "学制", value: item.duration },

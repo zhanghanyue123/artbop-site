@@ -29,7 +29,7 @@ export const competitions: CompetitionItem[] = [
     summary_zh: "聚焦 CG、数字创作与 AI 辅助创意教育的国际竞赛，入围者可获得官方展示与数字认证。",
     organizer: "CG Global Entertainment / Krystal Institute", location: "Online", deadline: "2026-09-30",
     eligibility: "Creators and students; see category rules", fee: "See official rules", prize: "Finalist certificate, badge and official showcase",
-    category: "Digital Art", tags: ["CG", "数字艺术", "AI 创作"], source_url: "https://showcase.cgge.media/en/3D-showcase/2026/", language: ["English"], published_at: "2026-08-02"
+    category: "Digital Art", tags: ["CG", "数字艺术", "AI 创作"], source_url: "https://showcase.cgge.media/en/3D-showcase/2026/", image: "https://showcase.cgge.media/static/images/showcase-2026/landing/hero-cube2-md.8cc038d7f0cf.webp", language: ["English"], published_at: "2026-08-02"
   },
   {
     id: "fca-spotlight-painting-2026", slug: "fca-spotlight-painting-2026",
@@ -47,6 +47,6 @@ export const competitions: CompetitionItem[] = [
     summary_zh: "面向 9–12 年级学生的免费艺术竞赛，作品需围绕指定的“无名英雄”展开，接受数字艺术、装置、雕塑及多种视觉媒介。",
     organizer: "ARTEFFECT", location: "International / Online", deadline: "2026-09-15 23:59 PT",
     eligibility: "Students in grades 9–12", fee: "Free", prize: "Awards and recognition; see official rules",
-    category: "Student Art", tags: ["青年艺术", "数字艺术", "免费参赛"], source_url: "https://www.arteffectlmc.org/competition/summer", language: ["English"], published_at: "2026-08-02"
+    category: "Student Art", tags: ["青年艺术", "数字艺术", "免费参赛"], source_url: "https://www.arteffectlmc.org/competition/summer", image: "https://cdn.prod.website-files.com/68a3a3894731574d74a4f56f/69c4127f91e1ede89f563ef6_Braidwood.png", language: ["English"], published_at: "2026-08-02"
   }
 ];

@@ -14,6 +14,7 @@ export default async function JobDetail({ params }: { params: Promise<{ slug: st
     title: item.title, titleZh: item.title_zh, organization: item.company,
     summary: item.summary, summaryZh: item.summary_zh, location: item.location,
     deadline: item.deadline, tags: item.tags, sourceUrl: item.source_url,
+    image: item.image,
     details: [
       ...(item.employment_type ? [{ label: "Contract", labelZh: "工作类型", value: item.employment_type }] : []),
       ...(item.salary ? [{ label: "Salary", labelZh: "薪酬", value: item.salary }] : []),

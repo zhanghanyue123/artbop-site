@@ -13,6 +13,7 @@ const items: Opportunity[] = programs.map((item) => ({
   deadline: item.next_deadline,
   tags: item.tags,
   source_url: item.source_url,
+  image: item.image,
   details: [
     { label: "Degree", label_zh: "学位", value: item.degree },
     { label: "Duration", label_zh: "学制", value: item.duration },

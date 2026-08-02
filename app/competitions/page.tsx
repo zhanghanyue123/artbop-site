@@ -7,6 +7,7 @@ const items: Opportunity[] = competitions.map((item) => ({
   organization: item.organizer, location: item.location || "Online",
   deadline: item.deadline, tags: item.tags, source_url: item.source_url,
   href: `/competitions/${item.slug}`,
+  image: item.image,
   details: [
     ...(item.fee ? [{ label: "Fee", label_zh: "费用", value: item.fee }] : []),
     ...(item.prize ? [{ label: "Award", label_zh: "奖励", value: item.prize }] : []),

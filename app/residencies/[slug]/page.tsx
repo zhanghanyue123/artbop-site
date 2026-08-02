@@ -14,6 +14,7 @@ export default async function ResidencyDetail({ params }: { params: Promise<{ sl
     title: item.title, titleZh: item.title_zh, organization: item.organizer,
     summary: item.summary, summaryZh: item.summary_zh, location: item.location,
     deadline: item.deadline, tags: item.tags, sourceUrl: item.source_url,
+    image: item.image,
     details: [
       ...(item.duration ? [{ label: "Duration", labelZh: "驻留周期", value: item.duration }] : []),
       ...(item.funding ? [{ label: "Funding", labelZh: "资助", value: item.funding }] : []),

@@ -18,6 +18,7 @@ export type Opportunity = {
   tags: string[];
   source_url: string;
   href: string;
+  image?: string;
 };
 
 export default function OpportunityListPage({
@@ -78,6 +79,17 @@ export default function OpportunityListPage({
                 <p className="mt-5 max-w-2xl leading-7 text-neutral-600">
                   {language === "zh" ? item.summary_zh || item.summary : item.summary}
                 </p>
+                {item.image && (
+                  <Link href={item.href} className="mt-6 block overflow-hidden rounded-xl bg-neutral-100">
+                    <img
+                      src={item.image}
+                      alt={language === "zh" ? item.title_zh || item.title : item.title}
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      className="aspect-video w-full object-cover transition duration-500 hover:scale-[1.015]"
+                    />
+                  </Link>
+                )}
                 <div className="mt-5 flex flex-wrap gap-2">
                   {item.tags.map((tag) => (
                     <span key={tag} className="rounded-full border border-neutral-300 px-3 py-1 text-xs text-neutral-600">{tag}</span>

@@ -7,6 +7,7 @@ const items: Opportunity[] = jobs.map((item) => ({
   organization: item.company, location: item.location,
   deadline: item.deadline, tags: item.tags, source_url: item.source_url,
   href: `/jobs/${item.slug}`,
+  image: item.image,
   details: [
     ...(item.employment_type ? [{ label: "Contract", label_zh: "工作类型", value: item.employment_type }] : []),
     ...(item.salary ? [{ label: "Salary", label_zh: "薪酬", value: item.salary }] : []),

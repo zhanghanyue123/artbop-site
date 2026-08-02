@@ -15,6 +15,7 @@ export default async function CompetitionDetail({ params }: { params: Promise<{ 
     summary: item.summary, summaryZh: item.summary_zh,
     location: item.location || "Online", deadline: item.deadline,
     tags: item.tags, sourceUrl: item.source_url,
+    image: item.image,
     details: [
       ...(item.fee ? [{ label: "Fee", labelZh: "参赛费用", value: item.fee }] : []),
       ...(item.prize ? [{ label: "Award", labelZh: "奖励与支持", value: item.prize }] : []),

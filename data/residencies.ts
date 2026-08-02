@@ -31,7 +31,7 @@ export const residencies: ResidencyItem[] = [
     organizer: "Platform Dalí", location: "Barcelona, Spain", deadline: "2026-09-07 23:59 CET",
     duration: "2027 programme", eligibility: "Artists and interdisciplinary practitioners", funding: "See each residency track",
     category: "Art & Science", tags: ["艺术科学", "研究驻留", "跨学科"],
-    source_url: "https://platformdali.org/en/call/open-call-for-residencies-2027-what-is-real/", language: ["English"], published_at: "2026-08-02"
+    source_url: "https://platformdali.org/en/call/open-call-for-residencies-2027-what-is-real/", image: "https://platformdali.org/uploads/2026/07/AAFF-EV2026-WhatIsReal-Convocatoria_Web-16x9-ENG-1024x576.png", language: ["English"], published_at: "2026-08-02"
   },
   {
     id: "matadero-situated-research-2027", slug: "matadero-situated-research-2027",

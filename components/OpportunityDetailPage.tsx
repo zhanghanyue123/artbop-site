@@ -19,6 +19,7 @@ export type OpportunityDetail = {
   details: { label: string; labelZh: string; value: string }[];
   tags: string[];
   sourceUrl: string;
+  image?: string;
   sections: { title: string; titleZh: string; body: string; bodyZh: string }[];
 };
 
@@ -44,6 +45,16 @@ export default function OpportunityDetailPage({ item }: { item: OpportunityDetai
           <p className="mt-8 max-w-3xl text-xl leading-8 text-neutral-600 md:text-2xl md:leading-10">
             {zh ? item.summaryZh || item.summary : item.summary}
           </p>
+          {item.image && (
+            <div className="mt-10 overflow-hidden rounded-2xl bg-neutral-100">
+              <img
+                src={item.image}
+                alt={zh ? item.titleZh || item.title : item.title}
+                referrerPolicy="no-referrer"
+                className="aspect-video w-full object-cover"
+              />
+            </div>
+          )}
         </div>
 
         <div className="grid gap-12 py-12 md:grid-cols-[minmax(0,1.5fr)_minmax(300px,0.65fr)] md:gap-20">
