@@ -17,21 +17,27 @@ export default function ArticleCard({
 }: ArticleCardProps) {
   return (
     <Link href={`/articles/${slug}`} className="block">
-      <article className="h-full overflow-hidden bg-white border border-neutral-200 rounded-[28px] shadow-sm hover:-translate-y-0.5 transition-transform">
+      <article className="group h-full">
         {image && (
-          <img
-            src={image}
-            alt={title}
-            className="w-full aspect-[4/3] object-cover"
-            loading="lazy"
-          />
+          <div className="aspect-[4/3] overflow-hidden bg-neutral-200">
+            <img
+              src={image}
+              alt={title}
+              className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+              loading="lazy"
+            />
+          </div>
         )}
-        <div className="p-6">
-          <div className="text-xs uppercase tracking-[0.25em] text-neutral-500 mb-3">
+        <div className="pt-4">
+          <div className="mb-3 text-[11px] uppercase tracking-[0.22em] text-neutral-500">
             {category}
           </div>
-          <h3 className="text-xl font-semibold leading-tight mb-3">{title}</h3>
-          <p className="text-neutral-600 leading-7 text-sm">{excerpt}</p>
+          <h3 className="mb-3 text-xl font-semibold leading-tight tracking-[-0.02em]">
+            {title}
+          </h3>
+          <p className="line-clamp-3 text-sm leading-6 text-neutral-600">
+            {excerpt}
+          </p>
         </div>
       </article>
     </Link>

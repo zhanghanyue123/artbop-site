@@ -1,10 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "./LanguageContext";
 
 const content = {
   en: {
-    brand: "ArtBop Site",
+    brand: "ArtBOP",
     description:
       "An editorial platform for art, design, architecture, and visual culture.",
     navigation: "Navigation",
@@ -20,11 +21,11 @@ const content = {
       editorial: "Editorial features",
       archive: "Archive",
     },
-    copyright: "© 2026 ArtBop Site. All rights reserved.",
+    copyright: "© 2026 ArtBOP. All rights reserved.",
   },
   zh: {
-    brand: "ArtBop Site",
-    description: "一个面向艺术、设计、建筑与视觉文化的编辑发布平台。",
+    brand: "ArtBOP",
+    description: "一个关注当代艺术、创意科技与视觉文化的编辑和社区平台。",
     navigation: "导航",
     pages: {
       home: "首页",
@@ -38,7 +39,7 @@ const content = {
       editorial: "官方精选",
       archive: "内容归档",
     },
-    copyright: "© 2026 ArtBop Site. 保留所有权利。",
+    copyright: "© 2026 ArtBOP. 保留所有权利。",
   },
 };
 
@@ -64,18 +65,18 @@ export default function Footer() {
               {t.navigation}
             </h3>
             <div className="space-y-2 text-sm text-neutral-600">
-              <a href="/" className="block hover:text-black">
+              <Link href="/" className="block hover:text-black">
                 {t.pages.home}
-              </a>
-              <a href="/features" className="block hover:text-black">
+              </Link>
+              <Link href="/features" className="block hover:text-black">
                 {t.pages.features}
-              </a>
-              <a href="/submit" className="block hover:text-black">
+              </Link>
+              <Link href="/submit" className="block hover:text-black">
                 {t.pages.submit}
-              </a>
-              <a href="/about" className="block hover:text-black">
+              </Link>
+              <Link href="/about" className="block hover:text-black">
                 {t.pages.about}
-              </a>
+              </Link>
             </div>
           </div>
 
