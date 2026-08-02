@@ -3,6 +3,7 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import { useLanguage } from "./LanguageContext";
+import Link from "next/link";
 
 export type Opportunity = {
   id: string;
@@ -16,6 +17,7 @@ export type Opportunity = {
   details: { label: string; label_zh: string; value: string }[];
   tags: string[];
   source_url: string;
+  href: string;
 };
 
 export default function OpportunityListPage({
@@ -65,7 +67,9 @@ export default function OpportunityListPage({
               <div>
                 <div className="mb-3 text-xs uppercase tracking-[0.16em] text-neutral-500">{item.organization}</div>
                 <h2 className="max-w-3xl text-2xl font-semibold leading-tight tracking-[-0.025em] md:text-4xl">
-                  {language === "zh" ? item.title_zh || item.title : item.title}
+                  <Link href={item.href} className="transition-opacity hover:opacity-55">
+                    {language === "zh" ? item.title_zh || item.title : item.title}
+                  </Link>
                 </h2>
                 <p className="mt-5 max-w-2xl leading-7 text-neutral-600">
                   {language === "zh" ? item.summary_zh || item.summary : item.summary}
@@ -75,6 +79,9 @@ export default function OpportunityListPage({
                     <span key={tag} className="rounded-full border border-neutral-300 px-3 py-1 text-xs text-neutral-600">{tag}</span>
                   ))}
                 </div>
+                <Link href={item.href} className="mt-6 inline-flex border-b border-black pb-1 text-sm">
+                  {language === "zh" ? "阅读完整介绍 →" : "Read full details →"}
+                </Link>
               </div>
               <div className="md:border-l md:border-neutral-300 md:pl-7">
                 <dl className="space-y-4 text-sm">
