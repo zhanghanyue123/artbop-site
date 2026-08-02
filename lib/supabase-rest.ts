@@ -1,5 +1,24 @@
 import { ArticleInput, ArticleRecord } from "./articles";
 
+export type ProductRecord = {
+  id: string;
+  slug: string;
+  status: "published" | "sold_out";
+  title_zh: string;
+  title_en: string;
+  description_zh: string;
+  description_en: string;
+  artist_name: string;
+  category: string;
+  price_amount: number | null;
+  currency: string;
+  stock_quantity: number | null;
+  cover_url: string;
+  images: string[];
+  purchase_url: string;
+  created_at: string;
+};
+
 function requiredEnvironment(name: string) {
   const value = process.env[name];
 
@@ -83,6 +102,25 @@ export async function getPublicArticle(slug: string) {
 
   const records = (await response.json()) as ArticleRecord[];
   return records[0] || null;
+}
+
+export async function getPublicProducts() {
+  const { url } = supabaseConfig();
+  const query = new URLSearchParams({
+    select: "*",
+    status: "in.(published,sold_out)",
+    order: "created_at.desc",
+  });
+  const response = await fetch(`${url}/rest/v1/products?${query}`, {
+    headers: publicHeaders(),
+    next: { revalidate: 60 },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Unable to load products: ${response.status}`);
+  }
+
+  return (await response.json()) as ProductRecord[];
 }
 
 export async function getEditorArticles() {

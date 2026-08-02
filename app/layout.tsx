@@ -1,5 +1,6 @@
 import "./globals.css";
 import { LanguageProvider } from "../components/LanguageContext";
+import { AuthProvider } from "../components/AuthContext";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -48,7 +49,9 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body>
-        <LanguageProvider>{children}</LanguageProvider>
+        <AuthProvider>
+          <LanguageProvider>{children}</LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   );

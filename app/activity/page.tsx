@@ -1,160 +1,167 @@
 "use client";
 
+import Link from "next/link";
+import { FormEvent, useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import ActivityCard from "../../components/ActivityCard";
-import { useLanguage } from "../../components/LanguageContext";
-
-const content = {
-  en: {
-    eyebrow: "Community Activity",
-    title: "A live stream of member publishing, saving, and profile updates.",
-    items: [
-      {
-        time: "3 hours ago",
-        user: "flower",
-        action: "saved",
-        target:
-          "Overflow (2021) – A real-time data sculpture that bridges people and places",
-        image:
-          "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1400&auto=format&fit=crop",
-        title:
-          "Overflow (2021) – A real-time data sculpture that bridges people and places",
-        excerpt:
-          "Overflow is a site-specific kinetic and generative sculpture driven by real-time data systems that monitor movement, connection, and public rhythms across urban space.",
-        date: "31/08/2021",
-        author: "mmansion",
-        type: "Member, Project",
-        people: "Gregg Perkins, James Curran, Mikhail Mansion, Olivia Mansion",
-        tags: "OpenCV, Processing",
-      },
-      {
-        time: "17 hours ago",
-        user: "velvetdisruption",
-        action: "changed location from WAW / NYC / ATX to",
-        target: "New York.",
-        image:
-          "https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?q=80&w=1400&auto=format&fit=crop",
-        title: "Member profile update",
-        excerpt:
-          "A location update in the member profile feed, visible as part of the public activity stream.",
-        date: "11/04/2026",
-        author: "velvetdisruption",
-        type: "Member Update",
-        people: "Profile record",
-        tags: "Location, Profile",
-      },
-      {
-        time: "1 day ago",
-        user: "artbopstudio",
-        action: "published",
-        target: "Soft Infrastructures for Civic Screens",
-        image:
-          "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1400&auto=format&fit=crop",
-        title: "Soft Infrastructures for Civic Screens",
-        excerpt:
-          "An editorial project exploring how public-facing media surfaces can act as emotional, cultural, and urban infrastructure.",
-        date: "10/04/2026",
-        author: "artbopstudio",
-        type: "Editorial Feature",
-        people: "ArtBop Editorial Team",
-        tags: "Media Architecture, Urban Screen",
-      },
-    ],
-  },
-  zh: {
-    eyebrow: "社区动态",
-    title: "一个实时显示成员发布、收藏与资料更新的动态流。",
-    items: [
-      {
-        time: "3 小时前",
-        user: "flower",
-        action: "收藏了",
-        target: "Overflow (2021) – 一件连接人与地点的实时数据雕塑",
-        image:
-          "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1400&auto=format&fit=crop",
-        title: "Overflow (2021) – 一件连接人与地点的实时数据雕塑",
-        excerpt:
-          "Overflow 是一个特定场域的动态生成装置作品，通过实时数据系统监测移动、连接与公共空间中的节奏变化。",
-        date: "31/08/2021",
-        author: "mmansion",
-        type: "成员，项目",
-        people: "Gregg Perkins, James Curran, Mikhail Mansion, Olivia Mansion",
-        tags: "OpenCV, Processing",
-      },
-      {
-        time: "17 小时前",
-        user: "velvetdisruption",
-        action: "将所在地从 WAW / NYC / ATX 修改为",
-        target: "纽约。",
-        image:
-          "https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?q=80&w=1400&auto=format&fit=crop",
-        title: "成员资料更新",
-        excerpt:
-          "这是一次成员资料中的所在地更新，会作为公共动态流的一部分显示出来。",
-        date: "11/04/2026",
-        author: "velvetdisruption",
-        type: "成员更新",
-        people: "资料记录",
-        tags: "所在地, 资料",
-      },
-      {
-        time: "1 天前",
-        user: "artbopstudio",
-        action: "发布了",
-        target: "Soft Infrastructures for Civic Screens",
-        image:
-          "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1400&auto=format&fit=crop",
-        title: "Soft Infrastructures for Civic Screens",
-        excerpt:
-          "一个围绕公共媒介界面如何成为情绪、文化与城市基础设施的编辑型项目。",
-        date: "10/04/2026",
-        author: "artbopstudio",
-        type: "官方精选",
-        people: "ArtBop 编辑团队",
-        tags: "媒体建筑, 城市屏幕",
-      },
-    ],
-  },
-};
+import { useAuth } from "../../components/AuthContext";
+import {
+  CommunityPost,
+  createCommunityPost,
+  getPublishedCommunityPosts,
+  uploadUserMedia,
+} from "../../lib/community-browser";
 
 export default function ActivityPage() {
-  const { language } = useLanguage();
-  const t = content[language];
+  const { loading, user, session } = useAuth();
+  const [posts, setPosts] = useState<CommunityPost[]>([]);
+  const [content, setContent] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    getPublishedCommunityPosts().then(setPosts).catch(() => setPosts([]));
+  }, []);
+
+  async function publish(event: FormEvent) {
+    event.preventDefault();
+    if (!session) return;
+    setBusy(true);
+    setMessage("");
+
+    try {
+      const imageUrls = file
+        ? [await uploadUserMedia(session, "community-media", file)]
+        : [];
+      await createCommunityPost(session, { content, linkUrl, imageUrls });
+      setContent("");
+      setLinkUrl("");
+      setFile(null);
+      setMessage("动态已提交，审核通过后会公开显示。");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "提交失败");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
-    <main className="min-h-screen bg-neutral-200 text-neutral-900">
+    <main className="min-h-screen bg-[#f4f3ef] text-neutral-950">
       <Header />
-
-      <section className="max-w-6xl mx-auto px-6 py-10">
-        <div className="text-[11px] uppercase tracking-[0.24em] text-neutral-500 mb-3">
-          {t.eyebrow}
+      <section className="mx-auto max-w-[1440px] px-5 py-14 md:px-8 md:py-20">
+        <div className="grid gap-8 border-b border-neutral-300 pb-10 md:grid-cols-[1fr_1fr] md:items-end">
+          <div>
+            <div className="mb-4 text-[11px] uppercase tracking-[0.28em] text-neutral-500">
+              Community Activity
+            </div>
+            <h1 className="text-5xl font-semibold tracking-[-0.05em] md:text-7xl">
+              社区动态
+            </h1>
+          </div>
+          <p className="max-w-xl text-lg leading-8 text-neutral-600">
+            分享项目、创作过程、研究线索与值得讨论的艺术科技内容。所有新动态先经过审核。
+          </p>
         </div>
-        <h1 className="text-3xl md:text-5xl font-normal tracking-tight max-w-4xl leading-tight">
-          {t.title}
-        </h1>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 pb-16 space-y-10">
-        {t.items.map((item, index) => (
-          <ActivityCard
-            key={index}
-            time={item.time}
-            user={item.user}
-            action={item.action}
-            target={item.target}
-            image={item.image}
-            title={item.title}
-            excerpt={item.excerpt}
-            date={item.date}
-            author={item.author}
-            type={item.type}
-            people={item.people}
-            tags={item.tags}
-          />
-        ))}
-      </section>
+      <section className="mx-auto grid max-w-[1440px] gap-12 px-5 pb-24 md:grid-cols-[0.8fr_1.6fr] md:px-8">
+        <aside>
+          {!loading && !user && (
+            <div className="border-t border-neutral-400 pt-5">
+              <h2 className="text-2xl font-semibold">加入讨论</h2>
+              <p className="mt-3 text-sm leading-6 text-neutral-600">
+                注册后可以发布动态并提交自己的项目。
+              </p>
+              <Link
+                href="/register"
+                className="mt-6 inline-flex rounded-full bg-black px-5 py-3 text-sm text-white"
+              >
+                创建账号
+              </Link>
+            </div>
+          )}
 
+          {session && (
+            <form onSubmit={publish} className="border-t border-neutral-400 pt-5">
+              <h2 className="mb-5 text-2xl font-semibold">发布动态</h2>
+              <textarea
+                required
+                maxLength={2000}
+                rows={7}
+                value={content}
+                onChange={(event) => setContent(event.target.value)}
+                placeholder="分享项目、研究或创作过程……"
+                className="w-full resize-none border border-neutral-400 bg-transparent p-4 outline-none focus:border-black"
+              />
+              <input
+                type="url"
+                value={linkUrl}
+                onChange={(event) => setLinkUrl(event.target.value)}
+                placeholder="相关链接（可选）"
+                className="mt-3 w-full border-b border-neutral-400 bg-transparent py-3 outline-none focus:border-black"
+              />
+              <label className="mt-5 block text-sm">
+                <span className="mb-2 block">图片（可选）</span>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(event) => setFile(event.target.files?.[0] || null)}
+                />
+              </label>
+              {message && <p className="mt-4 text-sm leading-6">{message}</p>}
+              <button
+                disabled={busy}
+                className="mt-5 rounded-full bg-black px-5 py-3 text-sm text-white disabled:opacity-50"
+              >
+                {busy ? "提交中…" : "提交审核"}
+              </button>
+            </form>
+          )}
+        </aside>
+
+        <div className="space-y-10">
+          {posts.length === 0 ? (
+            <div className="border-t border-neutral-400 py-8 text-neutral-500">
+              还没有公开动态，成为第一位分享者。
+            </div>
+          ) : (
+            posts.map((post) => (
+              <article key={post.id} className="border-t border-neutral-400 pt-5">
+                <div className="flex items-center justify-between text-sm text-neutral-500">
+                  <span>
+                    {post.profiles?.display_name ||
+                      post.profiles?.username ||
+                      "ArtBOP 用户"}
+                  </span>
+                  <time>{new Date(post.created_at).toLocaleDateString("zh-CN")}</time>
+                </div>
+                <p className="mt-5 whitespace-pre-wrap text-lg leading-8">
+                  {post.content}
+                </p>
+                {post.image_urls[0] && (
+                  <img
+                    src={post.image_urls[0]}
+                    alt="社区动态图片"
+                    className="mt-6 max-h-[680px] w-full bg-neutral-200 object-contain"
+                  />
+                )}
+                {post.link_url && (
+                  <a
+                    href={post.link_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-5 inline-block break-all text-sm underline underline-offset-4"
+                  >
+                    {post.link_url}
+                  </a>
+                )}
+              </article>
+            ))
+          )}
+        </div>
+      </section>
       <Footer />
     </main>
   );

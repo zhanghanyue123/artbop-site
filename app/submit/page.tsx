@@ -1,166 +1,191 @@
 "use client";
 
+import Link from "next/link";
+import { FormEvent, useState } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { useLanguage } from "../../components/LanguageContext";
+import { useAuth } from "../../components/AuthContext";
+import {
+  createProjectSubmission,
+  uploadUserMedia,
+} from "../../lib/community-browser";
 
-const content = {
-  en: {
-    eyebrow: "Submission",
-    title: "Submit your project",
-    description:
-      "Share your work with the ArtBop community. Projects can be published to the community stream or submitted for editorial review.",
-    formTitle: "Project Information",
-    projectName: "Project title",
-    category: "Category",
-    author: "Author / Studio",
-    email: "Email",
-    descriptionLabel: "Project description",
-    image: "Upload cover image",
-    submit: "Submit Project",
-    draft: "Save Draft",
-    note: "Official editorial features are reviewed separately from community submissions.",
-    categories: [
-      "Art",
-      "Design",
-      "Architecture",
-      "Visual Culture",
-      "Moving Image",
-      "Technology",
-    ],
-  },
-  zh: {
-    eyebrow: "投稿",
-    title: "提交你的项目",
-    description:
-      "将你的作品发布到 ArtBop 社区。项目可以直接发布到社区内容流，或提交给编辑部进行精选审核。",
-    formTitle: "项目信息",
-    projectName: "项目标题",
-    category: "分类",
-    author: "作者 / 工作室",
-    email: "邮箱",
-    descriptionLabel: "项目描述",
-    image: "上传封面图片",
-    submit: "提交项目",
-    draft: "保存草稿",
-    note: "官方编辑精选与社区投稿会采用不同的审核流程。",
-    categories: ["艺术", "设计", "建筑", "视觉文化", "动态影像", "技术"],
-  },
-};
+const categories = [
+  "当代艺术",
+  "互动装置",
+  "数字艺术",
+  "声音艺术",
+  "影像与动画",
+  "创意科技",
+  "建筑与空间",
+  "其他",
+];
 
 export default function SubmitPage() {
-  const { language } = useLanguage();
-  const t = content[language];
+  const { loading, user, session } = useAuth();
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+
+  async function submit(event: FormEvent<HTMLFormElement>, status: "draft" | "pending_review") {
+    event.preventDefault();
+    if (!session) return;
+    setBusy(true);
+    setMessage("");
+
+    try {
+      const form = new FormData(event.currentTarget);
+      const files = form
+        .getAll("images")
+        .filter((value): value is File => value instanceof File && value.size > 0)
+        .slice(0, 10);
+      const imageUrls = [];
+      for (const file of files) {
+        imageUrls.push(
+          await uploadUserMedia(session, "submission-media", file),
+        );
+      }
+      await createProjectSubmission(session, {
+        projectTitle: String(form.get("projectTitle") || ""),
+        category: String(form.get("category") || ""),
+        authorOrStudio: String(form.get("authorOrStudio") || ""),
+        contactEmail: String(form.get("contactEmail") || ""),
+        description: String(form.get("description") || ""),
+        institution: String(form.get("institution") || ""),
+        projectUrl: String(form.get("projectUrl") || ""),
+        imageUrls,
+        rightsConfirmed: form.get("rightsConfirmed") === "on",
+        status,
+      });
+      event.currentTarget.reset();
+      setMessage(
+        status === "draft"
+          ? "草稿已保存。"
+          : "投稿已收到，编辑审核后会更新状态。",
+      );
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "提交失败");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
-    <main className="min-h-screen bg-neutral-50 text-neutral-900">
+    <main className="min-h-screen bg-[#f4f3ef] text-neutral-950">
       <Header />
-
-      <section className="max-w-4xl mx-auto px-6 py-12">
-        <div className="text-xs uppercase tracking-[0.25em] text-neutral-500 mb-4">
-          {t.eyebrow}
+      <section className="mx-auto max-w-[1440px] px-5 py-14 md:px-8 md:py-20">
+        <div className="grid gap-8 border-b border-neutral-300 pb-10 md:grid-cols-[1fr_1fr] md:items-end">
+          <div>
+            <div className="mb-4 text-[11px] uppercase tracking-[0.28em] text-neutral-500">
+              Project Submission
+            </div>
+            <h1 className="text-5xl font-semibold tracking-[-0.05em] md:text-7xl">
+              提交你的项目
+            </h1>
+          </div>
+          <p className="max-w-xl text-lg leading-8 text-neutral-600">
+            欢迎艺术家、工作室、学校与文化机构提交真实项目。编辑审核通过后，作品将以 ArtBOP 正式项目页面发布。
+          </p>
         </div>
-
-        <h1 className="text-4xl md:text-6xl font-semibold tracking-tight leading-none max-w-3xl">
-          {t.title}
-        </h1>
-
-        <p className="mt-6 max-w-2xl text-lg text-neutral-600 leading-8">
-          {t.description}
-        </p>
       </section>
 
-      <section className="max-w-4xl mx-auto px-6 pb-16">
-        <div className="bg-white border border-neutral-200 rounded-[32px] p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold mb-6">{t.formTitle}</h2>
-
-          <form className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                {t.projectName}
+      {!loading && !user ? (
+        <section className="mx-auto max-w-[1440px] px-5 pb-24 md:px-8">
+          <div className="border-t border-neutral-400 pt-6">
+            <h2 className="text-3xl font-semibold">登录后开始投稿</h2>
+            <div className="mt-6 flex gap-3">
+              <Link href="/login" className="rounded-full bg-black px-5 py-3 text-sm text-white">
+                登录
+              </Link>
+              <Link href="/register" className="rounded-full border border-neutral-400 px-5 py-3 text-sm">
+                创建账号
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : session ? (
+        <section className="mx-auto max-w-4xl px-5 pb-24 md:px-8">
+          <form
+            onSubmit={(event) => submit(event, "pending_review")}
+            className="space-y-8 border-t border-neutral-400 pt-8"
+          >
+            <div className="grid gap-7 md:grid-cols-2">
+              <Field label="项目名称" name="projectTitle" required />
+              <label className="block">
+                <span className="mb-2 block text-sm">分类</span>
+                <select name="category" className="w-full border-b border-neutral-400 bg-transparent py-3 outline-none">
+                  {categories.map((category) => <option key={category}>{category}</option>)}
+                </select>
               </label>
-              <input
-                type="text"
-                className="w-full rounded-2xl border border-neutral-300 px-4 py-3 outline-none focus:border-black"
-                placeholder={t.projectName}
-              />
+              <Field label="艺术家 / 团队 / 工作室" name="authorOrStudio" required />
+              <Field label="学校、机构或展馆（可选）" name="institution" />
+              <Field label="联系邮箱" name="contactEmail" type="email" required defaultValue={user?.email || ""} />
+              <Field label="项目链接（可选）" name="projectUrl" type="url" />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                {t.category}
-              </label>
-              <select className="w-full rounded-2xl border border-neutral-300 px-4 py-3 outline-none focus:border-black bg-white">
-                {t.categories.map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </div>
+            <label className="block">
+              <span className="mb-2 block text-sm">项目介绍</span>
+              <textarea name="description" required minLength={100} rows={10} className="w-full resize-none border border-neutral-400 bg-transparent p-4 leading-7 outline-none focus:border-black" />
+              <span className="mt-2 block text-xs text-neutral-500">至少 100 字，请说明作品背景、体验、方法和创作者信息。</span>
+            </label>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                {t.author}
-              </label>
-              <input
-                type="text"
-                className="w-full rounded-2xl border border-neutral-300 px-4 py-3 outline-none focus:border-black"
-                placeholder={t.author}
-              />
-            </div>
+            <label className="block">
+              <span className="mb-2 block text-sm">项目图片（最多 10 张）</span>
+              <input name="images" type="file" multiple required accept="image/jpeg,image/png,image/webp" />
+            </label>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                {t.email}
-              </label>
-              <input
-                type="email"
-                className="w-full rounded-2xl border border-neutral-300 px-4 py-3 outline-none focus:border-black"
-                placeholder={t.email}
-              />
-            </div>
+            <label className="flex gap-3 text-sm leading-6">
+              <input name="rightsConfirmed" type="checkbox" required className="mt-1" />
+              <span>我确认拥有提交文字和图片的使用权，并授权 ArtBOP 在审核通过后用于项目展示与推广。</span>
+            </label>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                {t.descriptionLabel}
-              </label>
-              <textarea
-                rows={6}
-                className="w-full rounded-2xl border border-neutral-300 px-4 py-3 outline-none focus:border-black resize-none"
-                placeholder={t.descriptionLabel}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                {t.image}
-              </label>
-              <input
-                type="file"
-                className="block w-full text-sm text-neutral-600"
-              />
-            </div>
-
-            <p className="text-sm text-neutral-500 leading-7">{t.note}</p>
-
-            <div className="flex gap-4 pt-2">
-              <button
-                type="button"
-                className="px-5 py-3 rounded-2xl bg-black text-white text-sm"
-              >
-                {t.submit}
+            {message && <p className="border-l-2 border-black pl-4 text-sm leading-6">{message}</p>}
+            <div className="flex flex-wrap gap-3">
+              <button disabled={busy} className="rounded-full bg-black px-6 py-3 text-sm text-white disabled:opacity-50">
+                {busy ? "提交中…" : "提交审核"}
               </button>
               <button
                 type="button"
-                className="px-5 py-3 rounded-2xl border border-neutral-300 text-sm"
+                disabled={busy}
+                onClick={(event) => {
+                  const form = event.currentTarget.form;
+                  if (form) submit({ preventDefault() {}, currentTarget: form } as unknown as FormEvent<HTMLFormElement>, "draft");
+                }}
+                className="rounded-full border border-neutral-400 px-6 py-3 text-sm disabled:opacity-50"
               >
-                {t.draft}
+                保存草稿
               </button>
             </div>
           </form>
-        </div>
-      </section>
-
+        </section>
+      ) : null}
       <Footer />
     </main>
+  );
+}
+
+function Field({
+  label,
+  name,
+  type = "text",
+  required = false,
+  defaultValue,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+  defaultValue?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-2 block text-sm">{label}</span>
+      <input
+        name={name}
+        type={type}
+        required={required}
+        defaultValue={defaultValue}
+        className="w-full border-b border-neutral-400 bg-transparent py-3 outline-none focus:border-black"
+      />
+    </label>
   );
 }

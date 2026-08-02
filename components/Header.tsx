@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "./LanguageContext";
+import { useAuth } from "./AuthContext";
 
 const navText = {
   en: {
@@ -10,6 +11,8 @@ const navText = {
     submit: "Submit",
     shop: "Shop",
     about: "About",
+    login: "Log in",
+    account: "Account",
   },
   zh: {
     projects: "项目",
@@ -17,11 +20,14 @@ const navText = {
     submit: "投稿",
     shop: "商店",
     about: "关于",
+    login: "登录",
+    account: "账号",
   },
 };
 
 export default function Header() {
   const { language, setLanguage } = useLanguage();
+  const { loading, user } = useAuth();
   const t = navText[language];
 
   return (
@@ -36,7 +42,7 @@ export default function Header() {
 
         <div className="flex items-center gap-4 md:gap-8">
           <nav className="hidden items-center gap-6 text-sm text-neutral-700 sm:flex">
-            <Link href="/#latest" className="hover:text-black">
+            <Link href="/features" className="hover:text-black">
               {t.projects}
             </Link>
             <Link href="/activity" className="hover:text-black">
@@ -51,6 +57,14 @@ export default function Header() {
             <Link href="/about" className="hover:text-black">
               {t.about}
             </Link>
+            {!loading && (
+              <Link
+                href={user ? "/account" : "/login"}
+                className="hover:text-black"
+              >
+                {user ? t.account : t.login}
+              </Link>
+            )}
           </nav>
 
           <div className="flex overflow-hidden rounded-full border border-neutral-400 text-[11px]">
@@ -74,11 +88,16 @@ export default function Header() {
         </div>
 
         <nav className="flex w-full items-center justify-between border-t border-neutral-300 pt-4 text-sm text-neutral-700 sm:hidden">
-          <Link href="/#latest">{t.projects}</Link>
+          <Link href="/features">{t.projects}</Link>
           <Link href="/activity">{t.activity}</Link>
           <Link href="/submit">{t.submit}</Link>
           <Link href="/shop">{t.shop}</Link>
           <Link href="/about">{t.about}</Link>
+          {!loading && (
+            <Link href={user ? "/account" : "/login"}>
+              {user ? t.account : t.login}
+            </Link>
+          )}
         </nav>
       </div>
     </header>
