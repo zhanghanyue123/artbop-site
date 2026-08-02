@@ -1,8 +1,18 @@
-import ListingLanding from "../../components/ListingLanding";
+import OpportunityListPage, { Opportunity } from "../../components/OpportunityListPage";
+import { jobs } from "../../data/jobs";
+
+const items: Opportunity[] = jobs.map((item) => ({
+  id: item.id, title: item.title, title_zh: item.title_zh,
+  summary: item.summary, summary_zh: item.summary_zh,
+  organization: item.company, location: item.location,
+  deadline: item.deadline, tags: item.tags, source_url: item.source_url,
+  details: [
+    ...(item.employment_type ? [{ label: "Contract", label_zh: "工作类型", value: item.employment_type }] : []),
+    ...(item.salary ? [{ label: "Salary", label_zh: "薪酬", value: item.salary }] : []),
+    { label: "Work mode", label_zh: "工作方式", value: item.location_type },
+  ],
+}));
 
 export default function JobsPage() {
-  return <ListingLanding copy={{
-    zh: { eyebrow: "Creative Jobs", title: "招聘", description: "关注艺术机构、创意工作室、研究团队和文化项目中的工作与合作机会。", scopeTitle: "岗位范围", scope: ["艺术与策展岗位", "创意技术与开发", "设计、影像与内容", "实习、自由职业与项目合作"], notice: "招聘信息将标明机构、地点、工作形式、截止时间和原始申请链接。" },
-    en: { eyebrow: "Creative Jobs", title: "Jobs", description: "Roles and collaborations across art institutions, creative studios, research teams, and cultural projects.", scopeTitle: "Roles", scope: ["Art and curatorial roles", "Creative technology and development", "Design, moving image, and content", "Internships, freelance, and project work"], notice: "Listings will include the organization, location, working format, deadline, and original application link." },
-  }} />;
+  return <OpportunityListPage eyebrow="Creative Jobs" title="招聘" titleEn="Jobs" description="艺术、交互设计、创意技术与跨学科研究中的真实岗位。" descriptionEn="Verified roles across art, interaction design, creative technology, and interdisciplinary research." items={items} />;
 }

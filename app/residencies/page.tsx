@@ -1,8 +1,18 @@
-import ListingLanding from "../../components/ListingLanding";
+import OpportunityListPage, { Opportunity } from "../../components/OpportunityListPage";
+import { residencies } from "../../data/residencies";
+
+const items: Opportunity[] = residencies.map((item) => ({
+  id: item.id, title: item.title, title_zh: item.title_zh,
+  summary: item.summary, summary_zh: item.summary_zh,
+  organization: item.organizer, location: item.location,
+  deadline: item.deadline, tags: item.tags, source_url: item.source_url,
+  details: [
+    ...(item.duration ? [{ label: "Duration", label_zh: "周期", value: item.duration }] : []),
+    ...(item.funding ? [{ label: "Funding", label_zh: "资助", value: item.funding }] : []),
+    ...(item.eligibility ? [{ label: "Eligibility", label_zh: "申请对象", value: item.eligibility }] : []),
+  ],
+}));
 
 export default function ResidenciesPage() {
-  return <ListingLanding copy={{
-    zh: { eyebrow: "Residencies", title: "驻留", description: "汇集艺术家驻留、研究计划、实验室访问和阶段性工作室机会。", scopeTitle: "重点信息", scope: ["驻留地点与周期", "申请对象与研究方向", "住宿、工作室及制作条件", "资助、费用与截止日期"], notice: "驻留信息将以官方申请页面为依据，并明确费用、资助和住宿条件。" },
-    en: { eyebrow: "Residencies", title: "Residencies", description: "Artist residencies, research programs, lab visits, and temporary studio opportunities.", scopeTitle: "Key details", scope: ["Location and duration", "Eligibility and research focus", "Accommodation and production facilities", "Funding, fees, and deadline"], notice: "Listings will link to official application pages and clearly state fees, funding, and accommodation." },
-  }} />;
+  return <OpportunityListPage eyebrow="Residencies" title="驻留" titleEn="Residencies" description="经过核实的艺术家驻留、研究计划与艺术科技实验机会。" descriptionEn="Verified artist residencies, research programmes, and art-and-technology opportunities." items={items} />;
 }

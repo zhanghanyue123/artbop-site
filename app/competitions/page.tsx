@@ -1,8 +1,18 @@
-import ListingLanding from "../../components/ListingLanding";
+import OpportunityListPage, { Opportunity } from "../../components/OpportunityListPage";
+import { competitions } from "../../data/competitions";
+
+const items: Opportunity[] = competitions.map((item) => ({
+  id: item.id, title: item.title, title_zh: item.title_zh,
+  summary: item.summary, summary_zh: item.summary_zh,
+  organization: item.organizer, location: item.location || "Online",
+  deadline: item.deadline, tags: item.tags, source_url: item.source_url,
+  details: [
+    ...(item.fee ? [{ label: "Fee", label_zh: "费用", value: item.fee }] : []),
+    ...(item.prize ? [{ label: "Award", label_zh: "奖励", value: item.prize }] : []),
+    ...(item.eligibility ? [{ label: "Eligibility", label_zh: "参赛对象", value: item.eligibility }] : []),
+  ],
+}));
 
 export default function CompetitionsPage() {
-  return <ListingLanding copy={{
-    zh: { eyebrow: "Open Calls", title: "竞赛", description: "为艺术家、设计师、学生和跨学科团队整理值得关注的开放征集、奖项与竞赛。", scopeTitle: "信息标准", scope: ["主办方与官方来源", "参赛资格与作品范围", "截止日期与费用", "奖金、展览或支持内容"], notice: "本栏目只发布能够核实官方来源与截止时间的信息，避免转载失效或来源不明的征集。" },
-    en: { eyebrow: "Open Calls", title: "Competitions", description: "Selected open calls, awards, and competitions for artists, designers, students, and interdisciplinary teams.", scopeTitle: "Listing standards", scope: ["Organizer and official source", "Eligibility and disciplines", "Deadline and fees", "Awards, exhibitions, or support"], notice: "Only opportunities with verifiable official sources and current deadlines will be published." },
-  }} />;
+  return <OpportunityListPage eyebrow="Open Calls" title="竞赛" titleEn="Competitions" description="面向艺术、设计、数字创作与跨学科实践的真实开放征集。" descriptionEn="Verified open calls for art, design, digital creation, and interdisciplinary practice." items={items} />;
 }
