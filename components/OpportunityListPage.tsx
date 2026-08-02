@@ -38,7 +38,7 @@ export default function OpportunityListPage({
   const { language } = useLanguage();
 
   return (
-    <main className="min-h-screen bg-[#f4f3ef] text-neutral-950">
+    <main className="min-h-screen bg-white text-neutral-950">
       <Header />
       <section className="mx-auto max-w-[1440px] px-5 py-14 md:px-8 md:py-20">
         <div className="grid gap-8 border-b border-neutral-400 pb-10 md:grid-cols-2 md:items-end">

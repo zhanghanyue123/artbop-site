@@ -27,7 +27,7 @@ export default function OpportunityDetailPage({ item }: { item: OpportunityDetai
   const zh = language === "zh";
 
   return (
-    <main className="min-h-screen bg-[#f4f3ef] text-neutral-950">
+    <main className="min-h-screen bg-white text-neutral-950">
       <Header />
       <section className="mx-auto max-w-[1440px] px-5 py-10 md:px-8 md:py-16">
         <Link href={item.backHref} className="text-sm text-neutral-500 hover:text-black">
