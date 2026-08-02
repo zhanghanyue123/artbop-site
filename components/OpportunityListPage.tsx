@@ -82,10 +82,12 @@ export default function OpportunityListPage({
                 {item.image && (
                   <Link href={item.href} className="mt-6 block overflow-hidden rounded-xl bg-neutral-100">
                     <img
-                      src={item.image}
+                      src={`/api/source-image?url=${encodeURIComponent(item.image)}`}
                       alt={language === "zh" ? item.title_zh || item.title : item.title}
                       loading="lazy"
-                      referrerPolicy="no-referrer"
+                      onError={(event) => {
+                        event.currentTarget.parentElement?.style.setProperty("display", "none");
+                      }}
                       className="aspect-video w-full object-cover transition duration-500 hover:scale-[1.015]"
                     />
                   </Link>

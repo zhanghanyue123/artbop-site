@@ -48,9 +48,11 @@ export default function OpportunityDetailPage({ item }: { item: OpportunityDetai
           {item.image && (
             <div className="mt-10 overflow-hidden rounded-2xl bg-neutral-100">
               <img
-                src={item.image}
+                src={`/api/source-image?url=${encodeURIComponent(item.image)}`}
                 alt={zh ? item.titleZh || item.title : item.title}
-                referrerPolicy="no-referrer"
+                onError={(event) => {
+                  event.currentTarget.parentElement?.style.setProperty("display", "none");
+                }}
                 className="aspect-video w-full object-cover"
               />
             </div>
