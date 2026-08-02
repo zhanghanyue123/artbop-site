@@ -1,36 +1,8 @@
-"use client";
-
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import { useLanguage } from "../../components/LanguageContext";
-
-const content = {
-  en: {
-    title: "Residencies",
-    description:
-      "Artist residencies, research programs, and temporary studio opportunities.",
-  },
-  zh: {
-    title: "驻留",
-    description:
-      "艺术家驻留、研究项目与阶段性工作室机会。",
-  },
-};
+import ListingLanding from "../../components/ListingLanding";
 
 export default function ResidenciesPage() {
-  const { language } = useLanguage();
-  const t = content[language];
-
-  return (
-    <main className="min-h-screen bg-neutral-50 text-neutral-900">
-      <Header />
-      <section className="max-w-5xl mx-auto px-6 py-12">
-        <h1 className="text-4xl md:text-6xl font-semibold tracking-tight">{t.title}</h1>
-        <p className="mt-6 text-lg text-neutral-600 leading-8 max-w-2xl">
-          {t.description}
-        </p>
-      </section>
-      <Footer />
-    </main>
-  );
+  return <ListingLanding copy={{
+    zh: { eyebrow: "Residencies", title: "驻留", description: "汇集艺术家驻留、研究计划、实验室访问和阶段性工作室机会。", scopeTitle: "重点信息", scope: ["驻留地点与周期", "申请对象与研究方向", "住宿、工作室及制作条件", "资助、费用与截止日期"], notice: "驻留信息将以官方申请页面为依据，并明确费用、资助和住宿条件。" },
+    en: { eyebrow: "Residencies", title: "Residencies", description: "Artist residencies, research programs, lab visits, and temporary studio opportunities.", scopeTitle: "Key details", scope: ["Location and duration", "Eligibility and research focus", "Accommodation and production facilities", "Funding, fees, and deadline"], notice: "Listings will link to official application pages and clearly state fees, funding, and accommodation." },
+  }} />;
 }

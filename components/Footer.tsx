@@ -48,7 +48,7 @@ export default function Footer() {
   const t = content[language];
 
   return (
-    <footer className="border-t border-neutral-200 bg-white mt-20">
+    <footer className="mt-20 border-t border-neutral-300 bg-[#f4f3ef]">
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid md:grid-cols-[1.4fr_0.8fr_0.8fr] gap-10">
           <div className="max-w-sm">

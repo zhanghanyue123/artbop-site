@@ -1,32 +1,8 @@
-"use client";
-
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import { useLanguage } from "../../components/LanguageContext";
-
-const content = {
-  en: {
-    title: "Competitions",
-    description: "Open calls, awards, and competition listings for artists, designers, and students.",
-  },
-  zh: {
-    title: "竞赛",
-    description: "面向艺术家、设计师与学生的开放征集、奖项与竞赛信息。",
-  },
-};
+import ListingLanding from "../../components/ListingLanding";
 
 export default function CompetitionsPage() {
-  const { language } = useLanguage();
-  const t = content[language];
-
-  return (
-    <main className="min-h-screen bg-neutral-50 text-neutral-900">
-      <Header />
-      <section className="max-w-5xl mx-auto px-6 py-12">
-        <h1 className="text-4xl md:text-6xl font-semibold tracking-tight">{t.title}</h1>
-        <p className="mt-6 text-lg text-neutral-600 leading-8 max-w-2xl">{t.description}</p>
-      </section>
-      <Footer />
-    </main>
-  );
+  return <ListingLanding copy={{
+    zh: { eyebrow: "Open Calls", title: "竞赛", description: "为艺术家、设计师、学生和跨学科团队整理值得关注的开放征集、奖项与竞赛。", scopeTitle: "信息标准", scope: ["主办方与官方来源", "参赛资格与作品范围", "截止日期与费用", "奖金、展览或支持内容"], notice: "本栏目只发布能够核实官方来源与截止时间的信息，避免转载失效或来源不明的征集。" },
+    en: { eyebrow: "Open Calls", title: "Competitions", description: "Selected open calls, awards, and competitions for artists, designers, students, and interdisciplinary teams.", scopeTitle: "Listing standards", scope: ["Organizer and official source", "Eligibility and disciplines", "Deadline and fees", "Awards, exhibitions, or support"], notice: "Only opportunities with verifiable official sources and current deadlines will be published." },
+  }} />;
 }

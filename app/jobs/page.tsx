@@ -1,32 +1,8 @@
-"use client";
-
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import { useLanguage } from "../../components/LanguageContext";
-
-const content = {
-  en: {
-    title: "Jobs",
-    description: "Creative roles, freelance opportunities, internships, and studio openings.",
-  },
-  zh: {
-    title: "招聘",
-    description: "创意岗位、自由职业机会、实习与工作室招聘信息。",
-  },
-};
+import ListingLanding from "../../components/ListingLanding";
 
 export default function JobsPage() {
-  const { language } = useLanguage();
-  const t = content[language];
-
-  return (
-    <main className="min-h-screen bg-neutral-50 text-neutral-900">
-      <Header />
-      <section className="max-w-5xl mx-auto px-6 py-12">
-        <h1 className="text-4xl md:text-6xl font-semibold tracking-tight">{t.title}</h1>
-        <p className="mt-6 text-lg text-neutral-600 leading-8 max-w-2xl">{t.description}</p>
-      </section>
-      <Footer />
-    </main>
-  );
+  return <ListingLanding copy={{
+    zh: { eyebrow: "Creative Jobs", title: "招聘", description: "关注艺术机构、创意工作室、研究团队和文化项目中的工作与合作机会。", scopeTitle: "岗位范围", scope: ["艺术与策展岗位", "创意技术与开发", "设计、影像与内容", "实习、自由职业与项目合作"], notice: "招聘信息将标明机构、地点、工作形式、截止时间和原始申请链接。" },
+    en: { eyebrow: "Creative Jobs", title: "Jobs", description: "Roles and collaborations across art institutions, creative studios, research teams, and cultural projects.", scopeTitle: "Roles", scope: ["Art and curatorial roles", "Creative technology and development", "Design, moving image, and content", "Internships, freelance, and project work"], notice: "Listings will include the organization, location, working format, deadline, and original application link." },
+  }} />;
 }

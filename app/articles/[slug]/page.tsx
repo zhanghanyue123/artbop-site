@@ -265,7 +265,7 @@ export default function ArticleDetailPage() {
         };
 
   return (
-    <main className="min-h-screen bg-neutral-50 text-neutral-900">
+    <main className="min-h-screen bg-[#f4f3ef] text-neutral-900">
       <Header />
 
       <article className="max-w-4xl mx-auto px-6 py-14">
