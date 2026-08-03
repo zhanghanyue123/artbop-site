@@ -4,6 +4,7 @@ import {
   createEditorArticle,
   getEditorArticles,
 } from "@/lib/supabase-rest";
+import { submitPublishedArticle } from "@/lib/baidu";
 
 export async function GET() {
   if (!(await requireEditor())) {
@@ -27,10 +28,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    return NextResponse.json(
-      await createEditorArticle(await request.json()),
-      { status: 201 },
-    );
+    const record = await createEditorArticle(await request.json());
+    await submitPublishedArticle(record);
+    return NextResponse.json(record, { status: 201 });
   } catch (error) {
     console.error("Unable to create article:", error);
     return NextResponse.json(

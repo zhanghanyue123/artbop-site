@@ -4,6 +4,7 @@ import {
   deleteEditorArticle,
   updateEditorArticle,
 } from "@/lib/supabase-rest";
+import { submitPublishedArticle } from "@/lib/baidu";
 
 export async function PATCH(
   request: Request,
@@ -15,9 +16,9 @@ export async function PATCH(
 
   try {
     const { id } = await context.params;
-    return NextResponse.json(
-      await updateEditorArticle(id, await request.json()),
-    );
+    const record = await updateEditorArticle(id, await request.json());
+    await submitPublishedArticle(record);
+    return NextResponse.json(record);
   } catch (error) {
     console.error("Unable to update article:", error);
     return NextResponse.json(

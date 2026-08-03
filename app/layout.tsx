@@ -37,6 +37,13 @@ export const metadata: Metadata = {
     description:
       "发现当代艺术、数字艺术、互动装置与跨学科创作项目。",
   },
+  verification: process.env.NEXT_PUBLIC_BAIDU_SITE_VERIFICATION
+    ? {
+        other: {
+          "baidu-site-verification": process.env.NEXT_PUBLIC_BAIDU_SITE_VERIFICATION,
+        },
+      }
+    : undefined,
 };
 
 export default function RootLayout({
