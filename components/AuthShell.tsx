@@ -105,6 +105,14 @@ export default function AuthShell({ mode }: { mode: "login" | "register" }) {
             )}
           </label>
 
+          {!isRegister && (
+            <div className="-mt-5 mb-8 text-right text-sm">
+              <Link href="/forgot-password" className="underline underline-offset-4">
+                忘记密码？
+              </Link>
+            </div>
+          )}
+
           {message && (
             <p className="mb-6 border-l-2 border-neutral-900 pl-4 text-sm leading-6">
               {message}

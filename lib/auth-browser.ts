@@ -116,3 +116,18 @@ export async function signOutSession(accessToken: string) {
     storeSession(null);
   }
 }
+
+export async function requestPasswordReset(email: string, redirectTo: string) {
+  await authRequest("/recover", {
+    method: "POST",
+    body: JSON.stringify({ email, redirect_to: redirectTo }),
+  });
+}
+
+export async function updatePassword(accessToken: string, password: string) {
+  await authRequest("/user", {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: JSON.stringify({ password }),
+  });
+}
